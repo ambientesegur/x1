@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Script X1 — BoomBoom Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --bg2: #1a1a1a;
+    --bg3: #222222;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0;
+    --text2: #999;
+    --text3: #666;
+    --peach: #f97c3c;
+    --peach-dim: rgba(249,124,60,0.12);
+    --peach-border: rgba(249,124,60,0.35);
+    --green: #2ecc82;
+    --green-dim: rgba(46,204,130,0.1);
+    --green-border: rgba(46,204,130,0.3);
+    --red: #ff5f57;
+    --red-dim: rgba(255,95,87,0.1);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { background: var(--bg); }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 16px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .logo-dot {
+    width: 28px; height: 28px;
+    background: var(--peach);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .header-sub {
+    font-size: 11px;
+    color: var(--text3);
+    padding-left: 38px;
+  }
+
+  /* HINT */
+  .hint {
+    margin: 12px 16px;
+    padding: 10px 12px;
+    background: var(--peach-dim);
+    border: 1px solid var(--peach-border);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: #f0b090;
+    line-height: 1.5;
+  }
+  .hint b { font-weight: 600; color: var(--peach); }
+
+  /* FASE CARD */
+  .phases { padding: 0 16px 80px; }
+  .phase {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .phase.open { border-color: var(--border2); }
+
+  .ph {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .ph:active { background: var(--bg3); }
+
+  .badge {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .ptitle { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; line-height: 1.3; }
+  .psub { font-size: 11px; color: var(--text3); font-weight: 400; margin-top: 2px; }
+  .chevron {
+    font-size: 18px;
+    color: var(--text3);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .open .chevron { transform: rotate(180deg); }
+
+  /* BODY */
+  .pbody { display: none; padding: 0 14px 14px; }
+  .pbody.open { display: block; }
+
+  .sb {
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    padding: 12px 13px;
+    margin-bottom: 8px;
+  }
+  .slabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .st {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+  .st b { font-weight: 600; color: #fff; }
+  .st em { color: var(--text3); font-style: italic; font-size: 12.5px; }
+
+  /* CALLOUTS */
+  .tip {
+    border-left: 3px solid var(--green);
+    background: var(--green-dim);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 9px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #7eecc0;
+    line-height: 1.65;
+  }
+  .tip b { font-weight: 600; color: var(--green); }
+
+  .warn {
+    border-left: 3px solid var(--red);
+    background: var(--red-dim);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 9px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #ff9f9b;
+    line-height: 1.65;
+  }
+  .warn b { font-weight: 600; color: var(--red); }
+
+  /* OBJEÇÕES */
+  .obj {
+    border-left: 3px solid var(--peach);
+    background: var(--peach-dim);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .oq { font-size: 12.5px; font-weight: 600; color: var(--peach); margin-bottom: 5px; }
+  .oa { font-size: 12.5px; color: #e0c0a8; line-height: 1.65; }
+  .oa b { font-weight: 600; color: #f0d0b8; }
+
+  /* FAMOSAS */
+  .fama-block {
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: var(--bg);
+  }
+  .fama-nome { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .fama-seg { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+  .fama-uso { font-size: 12.5px; color: var(--text2); line-height: 1.6; }
+
+  /* KIT DESTAQUE */
+  .kit {
+    border: 2px solid var(--green);
+    background: var(--green-dim);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin: 10px 0;
+  }
+  .kit-label {
+    font-size: 10px; font-weight: 600; color: var(--green);
+    letter-spacing: .07em; text-transform: uppercase; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .kit-preco { font-size: 24px; font-weight: 600; color: #fff; letter-spacing: -0.02em; }
+  .kit-ou { font-size: 12px; color: var(--green); margin: 3px 0 10px; }
+  .kit-items { font-size: 12.5px; color: #7eecc0; line-height: 2; }
+
+  /* BADGE COLORS */
+  .b-blue { background: rgba(56,130,220,0.15); color: #7ab4f5; }
+  .b-red  { background: rgba(255,95,87,0.15);  color: #ff9f9b; }
+  .b-pink { background: rgba(230,90,150,0.15); color: #f0a0c8; }
+  .b-amb  { background: rgba(240,160,40,0.15); color: #f5c070; }
+  .b-pur  { background: rgba(140,100,220,0.15);color: #c0a0f0; }
+  .b-urg  { background: rgba(255,95,87,0.15);  color: #ff9f9b; }
+  .b-obj  { background: rgba(249,124,60,0.15); color: #f0a070; }
+  .b-grn  { background: rgba(46,204,130,0.15); color: #7eecc0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo-dot">🍑</div>
+    <h1>Script X1 — BoomBoom Up</h1>
+  </div>
+  <div class="header-sub">Foco no kit 90 dias · 8 fases</div>
+</div>
+
+<div class="hint">
+  Siga a ordem. Meta: fechar o <b>Desafio 90 Dias (3 potes)</b>. Use suas provas das famosas na fase 03.
+</div>
+
+<div class="phases">
+
+  <!-- 01 -->
+  <div class="phase" id="p1">
+    <div class="ph" onclick="tog('p1')">
+      <span class="badge b-blue">01</span>
+      <div style="flex:1"><div class="ptitle">Abertura — postura de consultora</div><div class="psub">Gera confiança antes de qualquer coisa</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b1">
+      <div class="sb">
+        <div class="slabel">Script</div>
+        <div class="st">
+          "Oi [nome], tudo bem? Me chamo [seu nome], sou consultora da Peach Up.<br><br>
+          Antes de qualquer coisa, quero entender a sua situação pra te indicar o que vai realmente funcionar pra você, tá bom?"<br><br>
+          <em>(Espera a confirmação dela.)</em><br><br>
+          "Me conta: o que tá te incomodando mais — celulite, estrias, foliculite? E faz quanto tempo você convive com isso?"
+        </div>
+        <div class="tip"><b>Postura:</b> você é consultora, não vendedora. Essa diferença muda tudo — ela baixa a guarda e fala com honestidade. Nunca pule essa etapa.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="phase" id="p2">
+    <div class="ph" onclick="tog('p2')">
+      <span class="badge b-red">02</span>
+      <div style="flex:1"><div class="ptitle">Sentir a dor</div><div class="psub">2 perguntas que abrem tudo</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b2">
+      <div class="sb">
+        <div class="slabel">Depois que ela responder</div>
+        <div class="st">
+          "Já deixou de usar alguma roupa que você gosta por causa disso? Ou foi à praia e ficou se sentindo mal?"<br><br>
+          <em>(Pausa. Deixa ela falar.)</em><br><br>
+          "E quando você se olha no espelho, você se sente confiante com o que vê?"<br><br>
+          <em>(Essa pergunta dói de um jeito bom. Ela vai admitir a insegurança.)</em>
+        </div>
+        <div class="tip"><b>Não force.</b> Quanto mais ela falar, mais ela mesma se convence. Você só faz as perguntas certas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="phase" id="p3">
+    <div class="ph" onclick="tog('p3')">
+      <span class="badge b-pink">03</span>
+      <div style="flex:1"><div class="ptitle">Famosas usam — você também</div><div class="psub">Seu maior diferencial</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b3">
+      <div class="sb">
+        <div class="slabel">Gancho antes de falar do produto</div>
+        <div class="st">
+          "Olha, esse produto é aquele mesmo que a [famosa que ela conhece] usa e indicou. Tenho até o print dela falando. Deixa eu te mandar."<br><br>
+          <em>(Manda o print/vídeo.)</em><br><br>
+          "Essas meninas recebem produto de tudo quanto é marca, né? Quando uma mulher com o corpo dela elogia e continua usando, é porque funciona de verdade."
+        </div>
+        <div class="tip"><b>Pergunta antes:</b> "você acompanha a [nome]?" — se ela disser que sim, o print tem 10x mais impacto.</div>
+      </div>
+      <div class="sb">
+        <div class="slabel">Famosas confirmadas na divulgação</div>
+        <div class="fama-block">
+          <div class="fama-nome">Juju Salimeni</div>
+          <div class="fama-seg">Influencer fitness — corpo é a marca dela</div>
+          <div class="fama-uso">"Além de firmar o bumbum, reduzir celulites, tem um brilho lindo que deixa a pele maravilhosa."</div>
+        </div>
+        <div class="fama-block">
+          <div class="fama-nome">Nicole Bahls</div>
+          <div class="fama-seg">Ex-panicat, referência de corpo no Brasil</div>
+          <div class="fama-uso">Divulga ativamente nos stories e feed.</div>
+        </div>
+        <div class="fama-block">
+          <div class="fama-nome">Nati Casassola</div>
+          <div class="fama-seg">Ex-BBB, corpo sempre em destaque</div>
+          <div class="fama-uso">Aparece no material oficial da Peach Up.</div>
+        </div>
+        <div class="fama-block">
+          <div class="fama-nome">Vivi Winkler</div>
+          <div class="fama-seg">Ex-BBB, grande engajamento feminino</div>
+          <div class="fama-uso">Divulga o BoomBoom Up para sua audiência.</div>
+        </div>
+        <div class="fama-block">
+          <div class="fama-nome">Lu Soares</div>
+          <div class="fama-seg">Fundadora da marca</div>
+          <div class="fama-uso">Criou o produto pro próprio problema. O antes/depois dela é o case principal — autenticidade máxima.</div>
+        </div>
+        <div class="warn"><b>Dica:</b> use sempre a famosa que a cliente já segue. Se tiver print ou vídeo da famosa usando, manda antes de qualquer explicação do produto.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="phase" id="p4">
+    <div class="ph" onclick="tog('p4')">
+      <span class="badge b-amb">04</span>
+      <div style="flex:1"><div class="ptitle">O produto em 1 parágrafo</div><div class="psub">Rápido, sem enrolação</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b4">
+      <div class="sb">
+        <div class="slabel">Script</div>
+        <div class="st">
+          "O BoomBoom Up tem ativo termogênico — quando você passa, a pele esquenta uns 40 minutos. Esse calor não é frescura, é a cafeína, a pimenta e o gengibre ativando a circulação lá dentro. É o que faz ele ser diferente de hidratante normal.<br><br>
+          <b>94%</b> das mulheres no teste clínico viram melhora na celulite. Em 7 dias você já sente diferença. Em 90 dias é outra pele."
+        </div>
+        <div class="tip"><b>Não precisa mais que isso.</b> Ela já viu a famosa usando. O produto só precisa de credibilidade técnica rápida — e você deu.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="phase" id="p5">
+    <div class="ph" onclick="tog('p5')">
+      <span class="badge b-pur">05</span>
+      <div style="flex:1"><div class="ptitle">Fechar no kit 90 dias</div><div class="psub">Ancoragem + lógica simples</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b5">
+      <div class="sb">
+        <div class="slabel">Por que o kit, não o pote único</div>
+        <div class="st">
+          "Existe o pote avulso por R$127. Mas vou ser direta: 30 dias não fecha o tratamento. A pele tem ciclo — você ativa no primeiro mês, consolida no segundo, e o resultado que fica de vez vem no terceiro.<br><br>
+          Quem pega 1 pote, vê resultado, quer continuar e acaba gastando mais. O kit já vem com os 3 potes por R$297 — você economiza e não corre risco de parar no meio."
+        </div>
+      </div>
+      <div class="kit">
+        <div class="kit-label">⭐ Desafio 90 dias — mais vendido</div>
+        <div class="kit-preco">R$ 297 <span style="font-size:14px;font-weight:400;color:var(--green)">à vista</span></div>
+        <div class="kit-ou">ou 6x de R$ 49,50</div>
+        <div class="kit-items">
+          ✓ 3 potes BoomBoom Up 200g<br>
+          ✓ Espátula grátis<br>
+          ✓ Frete grátis em até 4 dias<br>
+          ✓ Economiza R$ 384 vs preço cheio<br>
+          ✓ Garantia de dinheiro de volta
+        </div>
+      </div>
+      <div class="sb">
+        <div class="slabel">Ancoragem antes de falar o preço</div>
+        <div class="st">
+          "Uma drenagem linfática é R$100, R$120 a sessão. Pra ter resultado parecido, precisa de umas 10 sessões — <b>R$1.000 e mais</b>. O kit sai por R$297, você faz em casa, no seu tempo."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 -->
+  <div class="phase" id="p6">
+    <div class="ph" onclick="tog('p6')">
+      <span class="badge b-urg">06</span>
+      <div style="flex:1"><div class="ptitle">Urgência sem pressão</div><div class="psub">Natural, não forçado</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b6">
+      <div class="sb">
+        <div class="slabel">Escassez real de estoque</div>
+        <div class="st">
+          "Só aviso que o kit tá com estoque limitado. Esse produto vende muito por causa das famosinhas divulgando, e quando esgota, demora semanas pra repor."
+        </div>
+      </div>
+      <div class="sb">
+        <div class="slabel">Urgência de tempo — se ela hesitar</div>
+        <div class="st">
+          "Quando você quer tá com a pele diferente? Pra o verão? Pra algum evento?<br><br>
+          <em>(Espera ela responder.)</em><br><br>
+          Então precisa começar agora. 90 dias é 3 meses — conta aí a data e você chega lá tranquila se pedir hoje."
+        </div>
+        <div class="tip"><b>Deixa ela fazer a conta.</b> Quando percebe que o prazo fecha certinho pro evento ou estação dela, a urgência vem dela mesma.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="phase" id="p7">
+    <div class="ph" onclick="tog('p7')">
+      <span class="badge b-obj">07</span>
+      <div style="flex:1"><div class="ptitle">Objeções — resposta rápida</div><div class="psub">Sem rodeio</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b7">
+      <div class="obj">
+        <div class="oq">"Tá caro."</div>
+        <div class="oa">— "Em 6x no cartão são R$49,50. Menos de R$2 por dia. E você tem garantia — se não funcionar, devolve o dinheiro."</div>
+      </div>
+      <div class="obj">
+        <div class="oq">"Quero pegar só 1 pote pra ver."</div>
+        <div class="oa">— "Pode sim. Mas quase todo mundo que pega 1 quer continuar depois — e aí vai pagar <b>R$127 por pote</b>. No kit você paga R$99 cada um. Faz mais sentido já garantir os 3."</div>
+      </div>
+      <div class="obj">
+        <div class="oq">"Já usei produto assim e não funcionou."</div>
+        <div class="oa">— "O que usou antes esquentava quando aplicava? <b>Esse aquecimento é o diferencial.</b> Sem ele é só hidratante. E tem garantia — se não funcionar, você pede o dinheiro de volta."</div>
+      </div>
+      <div class="obj">
+        <div class="oq">"Preciso pensar."</div>
+        <div class="oa">— "Claro. Te mando o link agora pra você não perder o estoque enquanto pensa. Decide na hora que quiser."</div>
+      </div>
+      <div class="obj">
+        <div class="oq">"E se não funcionar?"</div>
+        <div class="oa">— "Aí você pede o reembolso, a marca garante. Mas <b>94 em 100 mulheres viram resultado</b> — a chance de não funcionar é bem pequena."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 -->
+  <div class="phase" id="p8">
+    <div class="ph" onclick="tog('p8')">
+      <span class="badge b-grn">08</span>
+      <div style="flex:1"><div class="ptitle">Fechamento</div><div class="psub">Direto e sem drama</div></div>
+      <span class="chevron">⌄</span>
+    </div>
+    <div class="pbody" id="b8">
+      <div class="sb">
+        <div class="slabel">Fechamento direto</div>
+        <div class="st">
+          "Bora fechar o kit 90 dias então? Te mando o link agora, frete grátis e espátula de brinde."
+        </div>
+      </div>
+      <div class="sb">
+        <div class="slabel">Se ela ainda tiver em dúvida</div>
+        <div class="st">
+          "Você me disse que isso te incomoda faz tempo. A [famosa que ela conhece] usa, 94% das clientes viram resultado, tem garantia de dinheiro de volta e você quer resolver isso antes de [evento/estação que ela mencionou].<br><br>
+          <b>Qual é o risco real de tentar?</b>"
+        </div>
+        <div class="tip"><b>Depois disso: silêncio.</b> Não fala mais nada. Quem falar primeiro, fecha.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function tog(id) {
+  var phase = document.getElementById(id);
+  var num = id.replace('p','');
+  var body = document.getElementById('b' + num);
+  var isOpen = phase.classList.contains('open');
+  phase.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+</script>
+</body>
+</html>
